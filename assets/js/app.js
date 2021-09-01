@@ -98,3 +98,19 @@ messageInput.addEventListener("keypress", (e)=>{
         messageInput.value = "";
     }
 });
+
+let messageList = document.getElementById("messageList");
+
+let renderMessage = (message) => {
+    let messageElement = document.createElement("li");
+    messageElement.innerHTML = `
+    <b>${message.user}</b>
+    <i>${formattedTimestamp(message.timestamp)}</i>
+    <p>${message.body}</p>
+    `
+
+    messageList.appendChild(messageElement);
+    messageList.scrollTop = messageList.scrollHeight;
+}
+
+room.on("message:new", message => renderMessage(message))

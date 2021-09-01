@@ -1,6 +1,7 @@
 defmodule ChatterWeb.RoomChannel do
     use ChatterWeb, :channel
     alias ChatterWeb.Presence
+    require Logger
     
 
     """
@@ -46,7 +47,7 @@ defmodule ChatterWeb.RoomChannel do
     """
     def handle_in("message:new", message, socket) do
 
-        IO.puts("message")
+        Logger.info(message)
 
         broadcast! socket, "message:new", %{
             user: socket.assigns.user,
