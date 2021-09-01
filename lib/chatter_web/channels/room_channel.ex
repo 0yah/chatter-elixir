@@ -25,7 +25,8 @@ defmodule ChatterWeb.RoomChannel do
 
         """
         Presence.track(socket, socket.assigns.user, %{
-            online_at: System.os_time(:millisecond)
+            online_at: System.os_time(:millisecond),
+            typing: false
         })
 
         """
@@ -52,6 +53,20 @@ defmodule ChatterWeb.RoomChannel do
         broadcast! socket, "message:new", %{
             user: socket.assigns.user,
             body: message,
+            timestamp: System.os_time(:millisecond)
+        }
+
+        {:noreply, socket}
+    end
+
+    def handle_in("message:typing", _message, socket) do
+
+        Logger.info("#{socket.assigns.user} is typing...")
+        
+
+        broadcast! socket, "message:typing", %{
+            user: socket.assigns.user,
+            typing: true,
             timestamp: System.os_time(:millisecond)
         }
 

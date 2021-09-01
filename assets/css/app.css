@@ -34,3 +34,11 @@
   display: block;
   margin: -1rem 0 2rem;
 }
+
+.typing{
+  background-color: red;
+  padding: 2px;
+  border-radius: 10px;
+  color: white;
+  transition: background-color 1s;
+}

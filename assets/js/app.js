@@ -49,9 +49,10 @@ let userList = document.getElementById("userList");
 
 let render = presences => {
 
+
     return userList.innerHTML = Presence.list(presences, listBy).map(presence => `
     
-    <li>
+    <li id="${presence.user}">
     ${presence.user}
     <br/>
     <small>online since ${presence.onlineAt}</small>
@@ -90,6 +91,8 @@ room.join();
 let messageInput = document.getElementById("newMessage")
 messageInput.addEventListener("keypress", (e)=>{
 
+    room.push("message:typing", e.target.value);
+
     /*
     If enter is pressed and the input is not blank
     */
@@ -114,3 +117,24 @@ let renderMessage = (message) => {
 }
 
 room.on("message:new", message => renderMessage(message))
+
+room.on("message:typing", message =>{
+
+    if(message.user !== user){
+
+        console.log(presences);
+        console.log(message);
+
+        let typingUser = document.getElementById(message.user);
+        typingUser.setAttribute("class","typing");
+
+        setTimeout(()=>{
+            typingUser.removeAttribute("class");
+
+        },5000)
+
+    }
+
+
+
+});
