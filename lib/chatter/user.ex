@@ -27,12 +27,12 @@ defmodule Chatter.User do
   end
 
   defp hash_pw(changeset) do
-
     case changeset do
-      %Ecto.Changeset{valid? true, changes: %{password: p}} ->
+
+      %Ecto.Changeset{valid?: true, changes: %{password: p }} ->
         put_change(changeset,  :encrypt_pass, Comeonin.Pbkdf2.hashpwsalt(p))
 
-        ->
+        _->
         changeset
     end
   end
