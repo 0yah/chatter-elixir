@@ -14,7 +14,7 @@ defmodule ChatterWeb.SessionController do
     def create(conn, %{"session" => %{"email" => user, "password" => password}}) do
         case login_with(conn, user, password, repo: Repo) do
             {:ok, conn} ->
-                _logged_user = Guardian.Plug.current_resource(conn)
+                logged_user = Guardian.Plug.current_resource(conn)
                 conn
                 |> put_flash(:info, "logged in!")
                 #Send the logged user to the homepage
@@ -33,5 +33,6 @@ defmodule ChatterWeb.SessionController do
         |> Guardian.Plug.sign_out
         |> redirect(to: "/")
     end
+    
   end
   

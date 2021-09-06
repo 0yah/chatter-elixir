@@ -7,7 +7,7 @@
 Get the user from the connection @conn.params["user"]
 
 -->
-Hello there, <span id="user"><%= @conn.params["user"] %></span>
+Hello there, <span id="user"><%= "#{current_user(@conn).email}" %></span>
 </div>
 
 <div class="col-md-8">

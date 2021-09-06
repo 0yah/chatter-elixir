@@ -25,7 +25,9 @@ defmodule ChatterWeb.Router do
   scope "/", ChatterWeb do
     pipe_through :browser
 
+    #Anyone can create an account
     resources "/users", UserController, [:new, :create]
+    #Anyone can log in and log out
     resources "/sessions", SessionController, only: [:create, :delete]
     get "/", SessionController, :new
 
@@ -34,8 +36,9 @@ defmodule ChatterWeb.Router do
   scope "/", ChatterWeb do
     pipe_through [:browser, :browser_auth]
 
-    get "/chat", PageController, :index
+    #User need to be logged in to access the chat
     resources "/users", UserController, only: [:show, :index, :update]
+    get "/chat", PageController, :index
   end
 
   # Other scopes may use custom stacks.

@@ -33,9 +33,9 @@ config :guardian, Guardian,
   ttl: {30, :days},
   allowed_drfit: 2000,
   verify_issuer: true,
-  secret_key: "IhVAnIXKqC3joIyzEsMtJJK482a/1dvBI3VclQC76xzjCBiyo3foq1OsNlyqEcei",
-  serializer: ChatterWeb.GuardianSeralizer
-
+  secret_key: "IhVAnIXKqC3joIyzEsMtJJK482a/1dvBI3VclQC76xzjCBiyo3foq1OsNlyqEcei", #String used to authenticate json tokens
+  serializer: ChatterWeb.GuardianSerializer
+  
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"

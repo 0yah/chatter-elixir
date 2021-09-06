@@ -32,8 +32,8 @@ defmodule Chatter.User do
       %Ecto.Changeset{valid?: true, changes: %{password: p }} ->
         put_change(changeset,  :encrypt_pass, Comeonin.Pbkdf2.hashpwsalt(p))
 
-        _->
-        changeset
+        _ ->
+          changeset
     end
   end
 end

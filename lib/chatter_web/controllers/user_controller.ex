@@ -47,8 +47,16 @@ defmodule ChatterWeb.UserController do
     #GET
     def edit(conn, %{"id" => id}) do
         user = Repo.get!(User, id)
-        changeset = User.changeset(user)
-        render(conn, "edit.html", user: user, changeset: changeset)
+        #Check if the current user wants to view thier profile
+        cond do
+            user == Guardian.Plug.current_resource(conn) ->
+                changeset = User.changeset(user)
+                render(conn, "edit.html", user: user, changeset: changeset)
+            :error ->
+                conn
+                |> put_flash(:error, "No access")
+                |> redirect(to: Routes.user_path(conn, :index))
+        end
         
     end
 
@@ -56,24 +64,39 @@ defmodule ChatterWeb.UserController do
     
         user = Repo.get!(User, id)
         changeset = User.reg_changeset(user, user_params)
-
-        case Repo.update(changeset) do
-            {:ok, user} ->
+        
+        cond do
+            user == Guardian.Plug.current_resource(conn) ->
+                case Repo.update(changeset) do
+                    {:ok, user} ->
+                        conn
+                        |> put_flash(:info, "User updated successfully.")
+                        |> redirect(to: Routes.user_path(conn, :show, user))
+                    {:error, changeset} ->
+                        render(conn, "edit.html", user: user, changeset: changeset)
+                end
+            :error ->
                 conn
-                |> put_flash(:info, "User updated successfully.")
-                |> redirect(to: Routes.user_path(conn, :show, user))
-            {:error, changeset} ->
-                render(conn, "edit.html", user: user, changeset: changeset)
-        end
+                |> put_flash(:error, "No access")
+                |> redirect(to: Routes.user_path(conn, :index))
+         end
     end
 
     def delete(conn, %{"id" => id}) do
         user = Repo.get!(User, id)
-        Repo.delete!(user)
 
-        conn
-        |> put_flash(:info, "User deleted successfully")
-        |> redirect(to: Routes.user_path(conn, :index))
+        cond do
+            user == Guardian.Plug.current_resource(conn) ->
+                Repo.delete!(user)
+                conn
+                |> Guardian.Plug.sign_out
+                |> put_flash(:info, "User deleted successfully")
+                |> redirect(to: Routes.session_path(conn, :index))
+            :error ->
+                conn
+                |> put_flash(:error, "No access")
+                |> redirect(to: Routes.user_path(conn, :index))
+        end
     end
 
 
